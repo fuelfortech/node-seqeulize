@@ -29,15 +29,36 @@ const sequelize = new Sequelize('node', 'root', '', {
 dotenv.config()
 
 
-app.get('/',async (req,res)=>{
+app.get('/student',async (req,res)=>{
     let result = await sequelize.query("Select * from student")
     res.json(result[0])
 })
 
-app.post('/',async (req,res)=>{
+app.post('/student/single',async (req,res)=>{
+  let result = await sequelize.query(`Select * from student where id=${req.body.id}`)
+  res.json(result[0])
+})
+
+app.post('/student/search',async (req,res)=>{
+  let result = await sequelize.query(`Select * from student where name like '%${req.body.name}%'`)
+  res.json(result[0])
+})
+app.post('/student',async (req,res)=>{
     let result = await sequelize.query(`Insert into student values(null,'${req.body.name}','${req.body.mobile}','${req.body.address}')`)
     res.json(result)
 })
+
+app.delete('/student',async (req,res)=>{
+  let result = await sequelize.query(`Delete from student where id=${req.body.id}`)
+  res.json(result)
+})
+
+app.put('/student',async (req,res)=>{
+  let result = await sequelize.query(`Update student set name='${req.body.name}',mobile='${req.body.mobile}',address='${req.body.address}' where id=${req.body.id}`)
+  res.json(result)
+})
+
+
 
 app.listen(process.env.PORT,()=>{
     console.log("Server Started")
