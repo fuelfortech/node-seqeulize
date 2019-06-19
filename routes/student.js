@@ -1,7 +1,8 @@
 import { Router } from "express";
 import Sequelize from 'sequelize'
 import bcrypt from 'bcrypt'
-
+import dotenv from 'dotenv'
+dotenv.config()
 const sequelize = new Sequelize('node', 'root', '', {
     host: 'localhost',
     dialect: 'mysql'
@@ -10,12 +11,12 @@ const router = Router();
 
 
 router.get('/',async (req,res)=>{
-    let result = await sequelize.query("Select * from student")
+    let result = await sequelize.query("SELECT *,(SELECT name from school WHERE school.id=school_id) as 'schoolname',(SELECT address from school WHERE school.id=school_id) as 'schooladdress' FROM student")
     res.json(result[0])
 })
 
 router.post('/single',async (req,res)=>{
-  let result = await sequelize.query(`Select * from student where id=${req.body.id}`)
+  let result = await sequelize.query(`SELECT *,(SELECT name from school WHERE school.id=school_id) as 'schoolname',(SELECT address from school WHERE school.id=school_id) as 'schooladdress' FROM student WHERE id=${req.body.id}`)
   res.json(result[0])
 })
 
@@ -47,7 +48,7 @@ router.post('/register',async (req,res)=>{
       console.log(err)
       return
     }
-    let result = await sequelize.query(`Insert into student values(null,'${req.body.name}','${req.body.mobile}','${req.body.email}','${hash}','${req.body.address}')`)
+    let result = await sequelize.query(`Insert into student values(null,'${req.body.name}','${req.body.mobile}','${req.body.email}','${hash}','${req.body.address}',${req.body.school_id})`)
     res.json(result)
   });
     

@@ -1,7 +1,8 @@
 import { Router } from "express";
 import Sequelize from 'sequelize'
 import bcrypt from 'bcrypt'
-
+import dotenv from 'dotenv'
+dotenv.config()
 const sequelize = new Sequelize('node', 'root', '', {
     host: 'localhost',
     dialect: 'mysql'
